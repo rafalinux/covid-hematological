@@ -2,12 +2,12 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.dates import MonthLocator, DateFormatter
+#from matplotlib.dates import MonthLocator, DateFormatter
 from datetime import datetime
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
 import seaborn as sns
-from statsmodels.tsa.api import SimpleExpSmoothing
+#from statsmodels.tsa.api import SimpleExpSmoothing
 
 # CSV file to import and some cleaning and preprocessing
 pacientes = pd.read_csv("/home/rafoide/Python_Projects/COVID_Hemato/pacientes_COVID_Hematologicos_redux_2020-2022.csv")
@@ -197,4 +197,40 @@ plt.gcf().autofmt_xdate()
 plt.show()
 
 # The defaults can be restored using
+plt.rcParams.update(plt.rcParamsDefault)
+
+##############################
+# POBLATIONAL PYRAMID
+##############################
+# Import and preprocess the dataset
+pyramid = pd.read_csv("piramide.csv")
+# convert male counts to negative
+pyramid.loc[pyramid.sexo.eq('Men'), 'poblacion'] = pyramid.poblacion.mul(-1) #cambio los valores de Men a negativos
+# reorder "rango" to non-ascending
+pyramid.sort_values('rango',inplace=True, ascending=False)
+
+# Plot the pyramid
+plt.rcParams['axes.titlesize'] = 10
+# plot
+plt.figure(figsize=(12,10))
+ax = sns.barplot(data=pyramid, x='poblacion',y='rango',
+            hue='sexo',orient='horizontal', 
+            #color = 'lightsteelblue',
+            palette = 'Blues',
+            dodge=False)
+
+# Decorations
+ax.set(xlabel="",
+       ylabel="Age range",
+       title="Hospitalized patients with hematologic malignancy and COVID-19")
+plt.yticks(fontsize=10)
+
+plt.legend()
+
+#turn the negative values on the x axis to positive
+ax.set_xticklabels([int(max(x, -x)) for x in ax.get_xticks()]) 
+
+# la función savefig() debe invocarse ANTES que show()
+#plt.savefig('pyramid_python.png', facecolor='white')
+plt.show()
 plt.rcParams.update(plt.rcParamsDefault)
