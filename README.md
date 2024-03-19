@@ -14,5 +14,7 @@ Files that can be uploaded and are included in this repository:
 - ingresos.csv
 - exitus.csv
 - exitus1.csv
+- piramide.csv
+- Figures/ 
 
 Updated: 19 March 2024
